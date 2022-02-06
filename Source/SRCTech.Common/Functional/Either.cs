@@ -18,6 +18,8 @@ namespace SRCTech.Common.Functional
             this IEither<TLeft, TRight> either,
             out TLeft value)
         {
+            Guard.ThrowIfNull(either, nameof(either));
+
             if (either.Side == EitherSide.Left)
             {
                 value = either.Left;
@@ -34,6 +36,8 @@ namespace SRCTech.Common.Functional
             this IEither<TLeft, TRight> either,
             out TRight value)
         {
+            Guard.ThrowIfNull(either, nameof(either));
+
             if (either.Side == EitherSide.Right)
             {
                 value = either.Right;
