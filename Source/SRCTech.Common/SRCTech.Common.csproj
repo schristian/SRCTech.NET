@@ -2,17 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Product>SRCTech.NET</Product>
-    <Description>A collection of .NET utilities I find useful in projects.</Description>
-    <Version>0.1.0-prerelease</Version>
-    <Authors>https://github.com/schristian</Authors>
-    <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/schristian/SRCTech.NET</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/schristian/SRCTech.NET</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright © Stephen Christian 2022</Copyright>
+    <Description>A collection of .NET utilities I find useful in projects.</Description>
   </PropertyGroup>
 
 </Project>

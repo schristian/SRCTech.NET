@@ -1,7 +1,10 @@
-name: Build and Release
+name: CI Build
 
 on:
   workflow_dispatch: {}
+  push:
+    branches:
+      - main
 
 jobs:
   Build:
@@ -16,8 +19,8 @@ jobs:
     - name: Restore Dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --version-suffix "ci.${{ github.run_id }}"
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build
     - name: Push NuGet Package
       run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetAPIKey }}
