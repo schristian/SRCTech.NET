@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace SRCTech.Common
 {
     public static class Guard
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ThrowIfNull<T>(
             T paramValue,
             string paramName)
@@ -18,6 +20,7 @@ namespace SRCTech.Common
             return paramValue;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyCollection<T> ThrowIfAnyItemsNull<T>(
             IReadOnlyCollection<T> paramValue,
             string paramName)

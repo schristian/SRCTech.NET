@@ -29,6 +29,8 @@ namespace SRCTech.Common.Functional
             this IOption<T> option,
             out T value)
         {
+            Guard.ThrowIfNull(option, nameof(option));
+
             if (option.HasValue)
             {
                 value = option.Value;
