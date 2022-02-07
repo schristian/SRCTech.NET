@@ -5,7 +5,7 @@ namespace SRCTech.Common.Collections
 {
     public sealed class Counter<T> : IDictionary<T, int>, IReadOnlyDictionary<T, int>
     {
-        private IDictionary<T, int> _itemCounts;
+        private Dictionary<T, int> _itemCounts;
         private int _totalCount;
 
         public Counter() 
@@ -16,6 +16,8 @@ namespace SRCTech.Common.Collections
 
         public Counter(IEqualityComparer<T> equalityComparer)
         {
+            Guard.ThrowIfNull(equalityComparer, nameof(equalityComparer));
+
             _itemCounts = new Dictionary<T, int>(equalityComparer);
             _totalCount = 0;
         }
@@ -27,6 +29,8 @@ namespace SRCTech.Common.Collections
         public bool IsEmpty => _itemCounts.Count == 0;
 
         public bool IsReadOnly => false;
+
+        public IEqualityComparer<T> Comparer => _itemCounts.Comparer;
 
         public ICollection<T> Keys => _itemCounts.Keys;
 
@@ -135,22 +139,22 @@ namespace SRCTech.Common.Collections
 
         public bool Contains(KeyValuePair<T, int> item)
         {
-            return _itemCounts.Contains(item);
+            return ((ICollection<KeyValuePair<T, int>>)_itemCounts).Contains(item);
         }
 
         public void CopyTo(KeyValuePair<T, int>[] array, int arrayIndex)
         {
-            _itemCounts.CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<T, int>>)_itemCounts).CopyTo(array, arrayIndex);
         }
 
         void ICollection<KeyValuePair<T, int>>.Add(KeyValuePair<T, int> item)
         {
-            _itemCounts.Add(item);
+            ((ICollection<KeyValuePair<T, int>>)_itemCounts).Add(item);
         }
 
         bool ICollection<KeyValuePair<T, int>>.Remove(KeyValuePair<T, int> item)
         {
-            return _itemCounts.Remove(item);
+            return ((ICollection<KeyValuePair<T, int>>)_itemCounts).Remove(item);
         }
 
         void IDictionary<T, int>.Add(T key, int value)
