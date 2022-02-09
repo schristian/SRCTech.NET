@@ -5,8 +5,30 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Collections
 {
-    public sealed class CounterTests_Indexer
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Assertions",
+        "xUnit2013:Do not use equality check to check for collection size.",
+        Justification = "Testing 'Count' property of the Counter class.")]
+    public static class CounterTests_Indexer
     {
+        [Fact]
+        public static void Counter_Indexer_NullGet_ThrowsArgumentNullException()
+        {
+            var counter = new Counter<string>();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => counter[null]);
+            Assert.Equal("item", exception.ParamName);
+        }
+
+        [Fact]
+        public static void Counter_Indexer_NullSet_ThrowsArgumentNullException()
+        {
+            var counter = new Counter<string>();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => counter[null] = 5);
+            Assert.Equal("item", exception.ParamName);
+        }
+
         [Fact]
         public static void Counter_Indexer_EmptyCounter_ReturnsZero()
         {
@@ -31,6 +53,7 @@ namespace SRCTech.Common.Tests.Collections
 
             Assert.False(counter.IsEmpty);
             Assert.Single(counter);
+            Assert.Equal(1, counter.Count);
             Assert.Equal(itemCount, counter.TotalCount);
             Assert.Equal(itemCount, counter[item1]);
             Assert.Equal(0, counter[item2]);
@@ -50,6 +73,7 @@ namespace SRCTech.Common.Tests.Collections
 
             Assert.False(counter.IsEmpty);
             Assert.Single(counter);
+            Assert.Equal(1, counter.Count);
             Assert.Equal(itemCount, counter.TotalCount);
             Assert.Equal(itemCount, counter[item1]);
             Assert.Equal(itemCount, counter[item2]);
@@ -84,6 +108,35 @@ namespace SRCTech.Common.Tests.Collections
             Assert.Equal(item1Count + item2Count, counter.TotalCount);
             Assert.Equal(item1Count, counter[item1]);
             Assert.Equal(item2Count, counter[item2]);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(0, 5)]
+        [InlineData(1, 0)]
+        [InlineData(5, 0)]
+        [InlineData(1, 1)]
+        [InlineData(1, 5)]
+        [InlineData(5, 1)]
+        [InlineData(5, 5)]
+        public static void Counter_Indexer_MultipleSets_ReturnsLatterCount(
+            int firstCount,
+            int secondCount)
+        {
+            var item = "A";
+
+            var expectedIsEmpty = secondCount == 0;
+            var expectedCount = expectedIsEmpty ? 0 : 1;
+
+            var counter = new Counter<string>();
+            counter[item] = firstCount;
+            counter[item] = secondCount;
+
+            Assert.Equal(expectedIsEmpty, counter.IsEmpty);
+            Assert.Equal(expectedCount, counter.Count);
+            Assert.Equal(secondCount, counter.TotalCount);
+            Assert.Equal(secondCount, counter[item]);
         }
     }
 }

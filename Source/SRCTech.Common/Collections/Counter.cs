@@ -44,6 +44,8 @@ namespace SRCTech.Common.Collections
         {
             get
             {
+                Guard.ThrowIfNull(item, nameof(item));
+
                 if (_itemCounts.TryGetValue(item, out var itemCount))
                 {
                     return itemCount;
@@ -54,6 +56,8 @@ namespace SRCTech.Common.Collections
 
             set
             {
+                Guard.ThrowIfNull(item, nameof(item));
+
                 bool hasValue = _itemCounts.TryGetValue(item, out var oldItemCount);
                 oldItemCount = hasValue ? oldItemCount : 0;
 
@@ -72,6 +76,8 @@ namespace SRCTech.Common.Collections
 
         public bool ContainsKey(T item)
         {
+            Guard.ThrowIfNull(item, nameof(item));
+
             return _itemCounts.ContainsKey(item);
         }
 

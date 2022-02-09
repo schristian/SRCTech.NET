@@ -4,7 +4,7 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Functional
 {
-    public sealed class UnitTests
+    public static class UnitTests
     {
         [Fact]
         public static void Unit_Default_ReturnsDefaultUnit()

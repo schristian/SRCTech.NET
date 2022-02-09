@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Functional
 {
-    public sealed class OptionTests
+    public static class OptionTests
     {
         [Fact]
         public static void Option_None_ReturnsOptionWithNoValue()

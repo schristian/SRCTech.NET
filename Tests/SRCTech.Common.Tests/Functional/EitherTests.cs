@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Functional
 {
-    public sealed class EitherTests
+    public static class EitherTests
     {
         [Theory]
         [InlineData(null)]

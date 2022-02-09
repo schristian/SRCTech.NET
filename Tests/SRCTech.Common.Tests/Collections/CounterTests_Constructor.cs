@@ -6,7 +6,11 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Collections
 {
-    public sealed class CounterTests_Constructor
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Assertions",
+        "xUnit2013:Do not use equality check to check for collection size.",
+        Justification = "Testing 'Count' property of the Counter class.")]
+    public static class CounterTests_Constructor
     {
         [Fact]
         public static void Counter_Constructor_WithoutEqualityComparer_CreatesEmptyInstance()
@@ -15,6 +19,7 @@ namespace SRCTech.Common.Tests.Collections
 
             Assert.Empty(counter);
             Assert.True(counter.IsEmpty);
+            Assert.Equal(0, counter.Count);
             Assert.Equal(0, counter.TotalCount);
             Assert.False(counter.IsReadOnly);
             Assert.Same(EqualityComparer<string>.Default, counter.Comparer);
@@ -39,6 +44,7 @@ namespace SRCTech.Common.Tests.Collections
 
             Assert.Empty(counter);
             Assert.True(counter.IsEmpty);
+            Assert.Equal(0, counter.Count);
             Assert.Equal(0, counter.TotalCount);
             Assert.False(counter.IsReadOnly);
             Assert.Same(equalityComparer.Object, counter.Comparer);

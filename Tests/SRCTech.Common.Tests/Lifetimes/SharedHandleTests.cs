@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SRCTech.Common.Tests.Lifetimes
 {
-    public sealed class SharedHandleTests
+    public static class SharedHandleTests
     {
         [Theory]
         [InlineData("disposable")]
