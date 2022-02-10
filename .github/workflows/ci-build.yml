@@ -21,6 +21,6 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --version-suffix "ci.${{ github.run_id }}"
     - name: Test
-      run: dotnet test --no-build
+      run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
     - name: Push NuGet Package
       run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetAPIKey }}
