@@ -88,11 +88,15 @@ namespace SRCTech.Common.Collections
 
         public int Add(T item)
         {
+            Guard.ThrowIfNull(item, nameof(item));
+
             return Add(item, 1);
         }
             
         public int Add(T item, int amount)
         {
+            Guard.ThrowIfNull(item, nameof(item));
+
             bool hasValue = _itemCounts.TryGetValue(item, out var oldItemCount);
             oldItemCount = hasValue ? oldItemCount : 0;
 
@@ -113,6 +117,8 @@ namespace SRCTech.Common.Collections
 
         public void AddRange(IEnumerable<T> items)
         {
+            Guard.ThrowIfNull(items, nameof(items));
+
             foreach (var item in items)
             {
                 Add(item);
@@ -121,16 +127,22 @@ namespace SRCTech.Common.Collections
 
         public int Remove(T item)
         {
+            Guard.ThrowIfNull(item, nameof(item));
+
             return Add(item, -1);
         }
 
         public int Remove(T item, int amount)
         {
+            Guard.ThrowIfNull(item, nameof(item));
+
             return Add(item, -amount);
         }
 
         public void RemoveRange(IEnumerable<T> items)
         {
+            Guard.ThrowIfNull(items, nameof(items));
+
             foreach (var item in items)
             {
                 Remove(item);

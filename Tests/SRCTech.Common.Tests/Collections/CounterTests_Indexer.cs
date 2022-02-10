@@ -43,6 +43,7 @@ namespace SRCTech.Common.Tests.Collections
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(5)]
+        [InlineData(-5)]
         public static void Counter_Indexer_SingleItem_ReturnsCorrectCount(int itemCount)
         {
             var item1 = "A";
@@ -63,7 +64,8 @@ namespace SRCTech.Common.Tests.Collections
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(5)]
-        public static void Counter_IndexerGet_NonDefaultComparer_ReturnsCorrectCount(int itemCount)
+        [InlineData(-5)]
+        public static void Counter_Indexer_NonDefaultComparer_ReturnsCorrectCount(int itemCount)
         {
             var item1 = "A";
             var item2 = "a";
