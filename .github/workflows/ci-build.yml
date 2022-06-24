@@ -24,15 +24,16 @@ jobs:
       run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
     - uses: actions/upload-artifact@v3
       with:
-        name: binaries
+        name: Binaries
         path: "./Source/*/bin/**"
 
   Publish:
     runs-on: ubuntu-latest
+    needs: [ Build ]
     environment: publish
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: binaries
+        name: Binaries
     - name: Push NuGet Package
       run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetAPIKey }}
