@@ -15,12 +15,24 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore Dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --version-suffix "ci.${{ github.run_id }}"
     - name: Test
       run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    # - name: Push NuGet Package
-    #  run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetAPIKey }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: binaries
+        path: "./Source/*/bin/**"
+
+  Publish:
+    runs-on: ubuntu-latest
+    environment: publish
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: binaries
+    - name: Push NuGet Package
+      run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetAPIKey }}
