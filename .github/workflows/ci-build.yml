@@ -8,4 +8,4 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build-workflow.yml
+    uses: ./.github/workflows/templates/build-workflow.yml

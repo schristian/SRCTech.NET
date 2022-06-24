@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+    secrets:
+      nugetAPIKey:
+        description: API Key for pushing NuGet Packages
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Download Binaries
+      uses: actions/download-artifact@v3
+      with:
+        name: binaries
+    - name: Push NuGet Package
+      run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.nugetAPIKey }}

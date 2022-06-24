@@ -1,0 +1,11 @@
+name: Release Build
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    uses: ./.github/workflows/templates/build-workflow.yml
+  publish:
+    uses: ./.github/workflows/templates/publish-workflow.yml
+    secrets: inherit
