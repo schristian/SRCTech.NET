@@ -32,13 +32,7 @@ jobs:
         --no-build 
         --configuration ${{ inputs.configuration }} 
         /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    - name: Publish
-      run: >
-        dotnet publish 
-        --no-build 
-        --configuration ${{ inputs.configuration }}
-        --output "./.artifacts/binaries"
     - uses: actions/upload-artifact@v3
       with:
         name: binaries
-        path: "./.artifacts/binaries"
+        path: "**/Source/*/bin/${{ inputs.configuration }}/**/*"
