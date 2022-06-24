@@ -8,4 +8,5 @@ jobs:
     uses: ./.github/workflows/template-build.yml
   publish:
     uses: ./.github/workflows/template-publish.yml
+    needs: [ build ]
     secrets: inherit
