@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      configuration:
+        description: .NET Build Configuration (Debug or Release)
+        type: string
+        required: false
+        default: Release
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore Dependencies
+      run: dotnet restore
+    - name: Build
+      run: > 
+        dotnet build 
+        --no-restore 
+        --configuration ${{ inputs.configuration }} 
+        --version-suffix "ci.${{ github.run_id }}"
+    - name: Test
+      run: >
+        dotnet test 
+        --no-build 
+        --configuration ${{ inputs.configuration }} 
+        /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - name: Publish
+      run: >
+        dotnet publish 
+        --no-build 
+        --configuration ${{ inputs.configuration }}
+        --output "./.artifacts/binaries"
+    - uses: actions/upload-artifact@v3
+      with:
+        name: binaries
+        path: "./.artifacts/binaries"
