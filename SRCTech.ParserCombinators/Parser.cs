@@ -38,22 +38,6 @@ namespace SRCTech.ParserCombinators
             return new TryParser<TToken, TResult>(source);
         }
 
-        public static async Task<IParserOutput<TState, IReadOnlyCollection<TResult>>> CombineOutputSequence<TState, TToken, TResult>(
-            this IParserInput<TState, TToken> input,
-            IAsyncEnumerable<IParserOutput<TState, TResult>> outputs)
-        {
-            var listOutput = await input.CreateValueOutput(new List<TResult>());
-            await foreach (var output in outputs)
-            {
-                listOutput = await input.CombineOutputSequence(
-                    listOutput,
-                    output,
-                    static (list, value) => { list.Add(value); return list; });
-            }
-
-            return listOutput;
-        }
-
         private sealed record FromValueParser<TToken, TResult>(
             TResult Value) : IParser<TToken, TResult>
         {

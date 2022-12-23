@@ -2,9 +2,10 @@
 
 namespace SRCTech.ParserCombinators
 {
-    public interface IEnumerableParser<in TToken, out TResult> : IParser<TToken, IReadOnlyCollection<TResult>>
+    public interface IEnumerableParser<in TToken, out TResult>
+        : IParser<TToken, IReadOnlyCollection<TResult>>
     {
-        IAsyncEnumerable<IParserOutput<TState, TResult>> ParseMany<TState>(
+        IEnumerableParserOutput<TState, TResult> ParseMany<TState>(
             IParserInput<TState, TToken> input);
     }
 }

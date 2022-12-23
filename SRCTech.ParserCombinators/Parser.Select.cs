@@ -26,13 +26,7 @@ namespace SRCTech.ParserCombinators
             private async Task<IParserOutput<TState, TResult>> ParseInternal<TState>(
                 IParserInput<TState, TToken> input)
             {
-                var sourceOutput = await SourceParser.Parse(input);
-                if (sourceOutput.TryGetValue(out var sourceValue))
-                {
-                    return ParserOutput.FromValue(sourceOutput.State, Selector(sourceValue));
-                }
-
-                return sourceOutput.CastError<TState, TSource, TResult>();
+                return (await SourceParser.Parse(input)).Select(Selector);
             }
         }
     }

@@ -14,14 +14,6 @@ namespace SRCTech.ParserCombinators
 
         IAwaitable<IParserOutput<TState, TResult>> CreateErrorOutput<TResult>(IParserError error);
 
-        IAwaitable<IParserOutput<TState, TResult>> CombineOutputSequence<T1, T2, TResult>(
-            IParserOutput<TState, T1> first,
-            IParserOutput<TState, T2> second,
-            Func<T1, T2, TResult> resultSelector);
-
-        IAwaitable<IParserOutput<TState, TResult>> CombineOutputAlternatives<TResult>(
-            IReadOnlyCollection<IParserOutput<TState, TResult>> alternatives);
-        
         IAwaitable<IParserOutput<TState, TToken>> Advance();
 
         IAwaitable<IParserOutput<TState, TResult>> Peek<TResult>(
@@ -29,5 +21,13 @@ namespace SRCTech.ParserCombinators
 
         IAwaitable<IParserOutput<TState, TResult>> Try<TResult>(
             IParser<TToken, TResult> parser);
+
+        IAwaitable<IParserOutput<TState, TResult>> Then<TSource, TIntermediate, TResult>(
+            IParser<TToken, TSource> parser,
+            Func<TSource, IParser<TToken, TIntermediate>> intermediateSelector,
+            Func<TSource, TIntermediate, TResult> resultSelector);
+
+        IAwaitable<IParserOutput<TState, TResult>> Or<TResult>(
+            IReadOnlyCollection<IParser<TToken, TResult>> parsers);
     }
 }

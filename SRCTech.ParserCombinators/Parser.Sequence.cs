@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SRCTech.Common.Async;
 
 namespace SRCTech.ParserCombinators
@@ -8,7 +9,7 @@ namespace SRCTech.ParserCombinators
         public static IEnumerableParser<TToken, TResult> Sequence<TToken, TResult>(
             IEnumerable<IParser<TToken, TResult>> parsers)
         {
-            return new SequenceParser<TToken, TResult>(parsers);
+            return new SequenceParser<TToken, TResult>(parsers.ToList());
         }
 
         public static IEnumerableParser<TToken, TResult> Sequence<TToken, TResult>(
@@ -18,27 +19,16 @@ namespace SRCTech.ParserCombinators
         }
 
         private sealed record SequenceParser<TToken, TResult>(
-            IEnumerable<IParser<TToken, TResult>> InnerParsers) : IEnumerableParser<TToken, TResult>
+            IReadOnlyList<IParser<TToken, TResult>> InnerParsers) : IEnumerableParser<TToken, TResult>
         {
-            public IAwaitable<IParserOutput<TState, IReadOnlyCollection<TResult>>> Parse<TState>(
-                IParserInput<TState, TToken> input)
+            public IAwaitable<IParserOutput<TState, IReadOnlyCollection<TResult>>> Parse<TState>(IParserInput<TState, TToken> input)
             {
-                return CombineOutputSequence(input, ParseMany(input)).ToAwaitable();
+                throw new System.NotImplementedException();
             }
 
-            public async IAsyncEnumerable<IParserOutput<TState, TResult>> ParseMany<TState>(
-                IParserInput<TState, TToken> input)
+            public IEnumerableParserOutput<TState, TResult> ParseMany<TState>(IParserInput<TState, TToken> input)
             {
-                foreach (var parser in InnerParsers)
-                {
-                    var result = await parser.Parse(input);
-                    yield return result;
-
-                    if (!result.HasValue)
-                    {
-                        yield break;
-                    }
-                }
+                return input.Generate()
             }
         }
     }

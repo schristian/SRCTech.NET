@@ -31,20 +31,7 @@ namespace SRCTech.ParserCombinators
             public IAwaitable<IParserOutput<TState, TResult>> Parse<TState>(
                 IParserInput<TState, TToken> input)
             {
-                return ParseInternal(input).ToAwaitable();
-            }
-
-            private async Task<IParserOutput<TState, TResult>> ParseInternal<TState>(
-                IParserInput<TState, TToken> input)
-            {
-                var sourceOutput = await SourceParser.Parse(input);
-                if (sourceOutput.TryGetValue(out var sourceValue))
-                {
-                    var intermediateOutput = await IntermediateSelector(sourceValue).Parse(input);
-                    return await input.CombineOutputSequence(sourceOutput, intermediateOutput, ResultSelector);
-                }
-
-                return sourceOutput.CastError<TState, TSource, TResult>();
+                return input.Then(SourceParser, IntermediateSelector, ResultSelector);
             }
         }
     }
