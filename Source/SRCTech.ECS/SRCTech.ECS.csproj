@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Builders\" />
+    <ProjectReference Include="..\SRCTech.Common\SRCTech.Common.csproj" />
   </ItemGroup>
 
 </Project>

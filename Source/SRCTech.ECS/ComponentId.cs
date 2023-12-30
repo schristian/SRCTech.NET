@@ -1,5 +1,5 @@
 ﻿namespace SRCTech.ECS;
 
-public record struct ComponentId(int Id)
+public record struct ComponentId(Type Type)
 {
 }
