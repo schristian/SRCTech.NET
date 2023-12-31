@@ -8,11 +8,11 @@ public interface IChunk
 
     Span<EntityId> GetEntityIds();
 
-    EntityId GetEntityId(int slot);
+    EntityId GetEntityId(EntitySlot slot);
 
     bool HasComponent<T>();
 
     Span<T> GetComponents<T>();
 
-    ref T GetComponent<T>(int slot);
+    ref T GetComponent<T>(EntitySlot slot);
 }

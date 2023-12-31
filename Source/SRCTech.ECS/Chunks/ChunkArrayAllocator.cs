@@ -41,7 +41,8 @@ internal class ChunkArrayAllocator : IChunkArrayAllocator
 
         public IChunkArray AcquireArray(int capacity)
         {
-            return new ChunkArray<T>(_arrayPool, capacity);
+            T[] array = _arrayPool.Rent(capacity);
+            return new ChunkArray<T>(_arrayPool, array);
         }
     }
 
@@ -49,27 +50,35 @@ internal class ChunkArrayAllocator : IChunkArrayAllocator
     {
         private readonly ArrayPool<T> _arrayPool;
 
-        public ChunkArray(ArrayPool<T> arrayPool, int capacity)
+        public ChunkArray(ArrayPool<T> arrayPool, T[] array)
         {
             _arrayPool = arrayPool;
-            Array = arrayPool.Rent(capacity);
+            Array = array;
         }
 
         public T[] Array { get; }
+
+        Array IChunkArray.Array => Array;
 
         public void Dispose()
         {
             _arrayPool.Return(Array);
         }
 
-        public void Copy(int sourceSlot, int destinationSlot)
+        public void CopyTo(
+            EntitySlot sourceSlot,
+            IChunkArray destinationArray,
+            EntitySlot destinationSlot)
         {
-            Array[destinationSlot] = Array[sourceSlot];
+            CopyTo(sourceSlot, (IChunkArray<T>)destinationArray, destinationSlot);
         }
 
-        public Span<T> GetSpan(int count)
+        public void CopyTo(
+            EntitySlot sourceSlot,
+            IChunkArray<T> destinationArray,
+            EntitySlot destinationSlot)
         {
-            return new Span<T>(Array, 0, count);
+            destinationArray.Array[destinationSlot] = Array[sourceSlot];
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SRCTech.ECS.Chunks;
 
-public sealed class Chunk : IDisposable
+internal sealed class Chunk : IDisposable
 {
     private readonly IChunkArrayAllocator _chunkArrayAllocator;
     private readonly IChunkArray<EntityId> _entityIds;
@@ -22,41 +22,40 @@ public sealed class Chunk : IDisposable
 
     public int Count { get; set; }
 
+    public bool IsEmpty => Count == 0;
+
+    public EntitySlot LastSlot => new EntitySlot(Count - 1);
+
     public void Dispose()
     {
         _componentArrays.Values.DisposeAll();
     }
 
-    public EntitySlot AddEntity(EntityId entityId)
+    public void CopyEntity(
+        EntitySlot sourceSlot,
+        Chunk destinationChunk,
+        EntitySlot destinationSlot)
     {
-        if (Count >= Capacity)
-        {
-            throw new InvalidOperationException(); // TODO: Add message
-        }
+        _entityIds.CopyTo(sourceSlot, destinationChunk._entityIds, destinationSlot);
 
-        int slot = Count;
-        Count += 1;
-        _entityIds.GetSpan(Count)[slot] = entityId;
-        return new EntitySlot(slot);
+        foreach (var kvp in destinationChunk._componentArrays)
+        {
+            _componentArrays[kvp.Key].CopyTo(sourceSlot, kvp.Value, destinationSlot);
+        }
     }
 
-    public void RemoveEntity(EntitySlot entitySlot)
+    public EntitySlot PushEntity(EntityId entityId)
     {
-        var slot = entitySlot.Slot;
-        var lastSlot = Count - 1;
-        if (slot != lastSlot)
-        {
-            Span<EntityId> entityIds = _entityIds.GetSpan(Count);
-            var movedEntityId = entityIds[lastSlot];
-            entityIds[slot] = movedEntityId;
+        Count += 1;
+        _entityIds.Array[LastSlot] = entityId;
+        return new EntitySlot(LastSlot);
+    }
 
-            foreach (var array in _componentArrays.Values)
-            {
-                array.Copy(lastSlot, slot);
-            }
-        }
-
+    public EntityId PopEntity()
+    {
+        var entityId = _entityIds.Array[LastSlot];
         Count -= 1;
+        return entityId;
     }
 
     public void AddComponentType(ComponentId componentId)
@@ -78,7 +77,7 @@ public sealed class Chunk : IDisposable
         }
 
         IChunkArray<T> typedArray = (IChunkArray<T>)array;
-        return typedArray.GetSpan(Count);
+        return new Span<T>(typedArray.Array, 0, Count);
     }
 
     public ref T GetComponentRef<T>(EntitySlot entitySlot)

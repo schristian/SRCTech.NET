@@ -2,10 +2,20 @@
 
 internal interface IChunkArray : IDisposable
 {
-    void Copy(int sourceSlot, int destinationSlot);
+    Array Array { get; }
+
+    void CopyTo(
+        EntitySlot sourceSlot,
+        IChunkArray destinationArray,
+        EntitySlot destinationSlot);
 }
 
 internal interface IChunkArray<T> : IChunkArray
 {
-    Span<T> GetSpan(int count);
+    new T[] Array { get; }
+
+    void CopyTo(
+        EntitySlot sourceSlot,
+        IChunkArray<T> destinationArray,
+        EntitySlot destinationSlot);
 }
